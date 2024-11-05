@@ -1,6 +1,7 @@
 import mlflow.pyfunc
 import streamlit as st
 import pandas as pd
+import joblib
 
 # Load the model from the MLflow model registry or from a specific path
 
@@ -32,8 +33,7 @@ if model_name:
     model_uri = f"models:/{model_name}/{latest_version}"
     model = mlflow.pyfunc.load_model(model_uri)
 else:
-    print("No registered models found.")
-
+    model = joblib.load("model.pkl")
 
 
 # Step 1: Choose Input Mode
