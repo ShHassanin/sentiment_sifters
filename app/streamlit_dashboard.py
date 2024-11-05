@@ -2,7 +2,7 @@
 import streamlit as st
 
 
-st.set_page_config(page_icon = 'app/dashboard_icon.jpg',page_title= 'Dashboard  ',layout="wide")
+st.set_page_config(page_title= 'Dashboard  ')
 
 st.image("app/dashboard.png")
 
