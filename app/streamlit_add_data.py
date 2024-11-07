@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pyodbc
-#import app
+import os
 
 
 # Define the Azure Database connection directly in this file
@@ -39,6 +39,16 @@ def process_single_file(file, connection):
     connection.commit()
     cursor.close()
 
+def combined_data(path,data):
+    
+    files = os.listdir(path)
+    df = pd.DataFrame()
+    for csv in files:
+        df = pd.concat([df,pd.read_csv(f'{path}/{csv}')],axis=0)
+    df_combined = pd.concat([df,data],axis=0)
+    return df_combined
+    #df = pd.read_csv("data/processed/*.csv")
+
 # Streamlit app structure
 st.markdown("<h1 style='text-align: center;text-decoration: underline;color:GoldenRod'>Add New Data </h1>", unsafe_allow_html=True)
 st.subheader("Sentiment Sifters Data Uploader")
@@ -55,7 +65,12 @@ if uploaded_file is not None:
 
     # Step 3: Process and Insert Data into Azure SQL Database
     if st.button("Upload Data to Database"):
-        connection = get_azure_database_connection()
-        process_single_file(uploaded_file, connection)
-        connection.close()
-        st.success("Data successfully uploaded to Azure SQL Database!")
+        try:
+            connection = get_azure_database_connection()
+            process_single_file(uploaded_file, connection)
+            connection.close()
+            st.success("Data successfully uploaded to Azure SQL Database!")
+        except:
+            combined_df = combined_data("data/processed/",df)
+            combined_df.to_csv("data/combined/combined_csv.csv")
+            st.success("Data successfully uploaded to Local storage!")
