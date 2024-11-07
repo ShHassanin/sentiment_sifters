@@ -72,5 +72,5 @@ if uploaded_file is not None:
             st.success("Data successfully uploaded to Azure SQL Database!")
         except:
             combined_df = combined_data("data/processed/",df)
-            combined_df.to_csv("data/combined/combined_csv.csv")
+            combined_df.to_csv("data/combined_csv.csv")
             st.success("Data successfully uploaded to Local storage!")
